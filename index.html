@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <link href="libraries\bootstrap-5.3.8-dist\css\bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link href="css\styles.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="sticky-top bg-white w-100 border border-bottom border-black shadow-sm p-2">
+            <nav class="nav">
+                <a class="nav-link" id="export_checklist" href="#" onclick="exportFile()">Export</a>
+                <label for="file-upload" class="btn btn-link text-decoration-none">
+                    Import
+                </label>
+                <input type="file" class="form-control d-none" id="file-upload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                <a class="btn btn-danger" href="#" onclick="resetData()">Reset</a>
+            </nav>
+        </div>
+
+        <div class="container">
+            <div class="row" id="pokemon_list">
+
+            </div>
+        </div>
+
+        
+
+        <template id="templatepkm">
+            <div class="col-1 p-1 text-center">
+                <div class="border border-black py-1">
+                    <div class="pkm_number" id="">#000</div>
+                    <div>
+                        <img class="border border-black pkm_img_url" id="" src="images/---.png" />
+                    </div>
+                    <div class="pkm_name" id="">MissingNo.</div>
+                    <div class="d-flex justify-content-between align-items-end px-2">
+                        <button class="btn btn-link text-decoration-none p-0 btn_add_pkm" id="" data-id="" onclick="addPokemon(this)">+</button>
+                        <span class="pkm_counter" id="">0</span>
+                        <button class="btn btn-link text-decoration-none p-0 btn_sub_pkm" id="" data-id="" onclick="substractPokemon(this)">-</button>
+                    </div>
+                    <div class="pkm_evo_container d-none">
+                        <div>De/Evolve</div>
+                        <div class="pkm_evolutions d-flex justify-content-center flex-wrap" id=""></div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="template_pkm_evo">
+            <img class="evo-icon border border-black" style="width: 28px; image-rendering: pixelated; margin: 1px" id="" src="" data-id="" />
+        </template>
+    </body>
+    <script src="libraries\bootstrap-5.3.8-dist\js\bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="pokemon.js"></script>
+    <script type="text/javascript" src="js/scripts.js"></script>
+</html>
