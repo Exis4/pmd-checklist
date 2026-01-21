@@ -1,8 +1,14 @@
-.pkm_img_url {
+.pkm-img-url {
     width: 56px; 
+}
+.pkmn-evo-icon {
+    width: 28px;
+    margin: 1px;
+}
+.pkm-img-url, .pkmn-evo-icon {
     image-rendering: pixelated;
 }
 
-.grayscale {
-    filter: grayscale(1) brightness(0.6);
+.grayscale-dark {
+    filter: grayscale(1) brightness(0.7);
 }

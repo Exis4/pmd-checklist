@@ -1,72 +1,17 @@
-const list = document.getElementById('pokemon_list');
+const list = document.querySelector('#pokemon_list');
 const template = document.querySelector("#templatepkm");
-const templateEvo = document.querySelector("#template_pkm_evo");
-
+const templateEvo = document.querySelector("#template_pkmn_evo");
 
 // Test to see if the browser supports the HTML template element by checking
 // for the presence of the template element's content attribute.
 if ("content" in document.createElement("template")) {
-    pokemonList.forEach((pokemon) => {
-        const pokemon_id = pokemon.id;
-        const clone = document.importNode(template.content, true);
-        let pkm_number = clone.querySelector(".pkm_number");
-        let pkm_img_url = clone.querySelector(".pkm_img_url");
-        let pkm_name = clone.querySelector(".pkm_name");
-        let btn_add_pkm = clone.querySelector(".btn_add_pkm");
-        let btn_sub_pkm = clone.querySelector(".btn_sub_pkm");
-        let pkm_counter = clone.querySelector(".pkm_counter");
-        let pkm_evolutions = clone.querySelector(".pkm_evolutions");
-
+    Object.entries(PokemonList).forEach(([pokemonID, pokemon]) => {
         if (pokemon.forms) {
-            appendForms(pokemon);
-        } else {
-            var pokemonCounter = localStorage.getItem(pokemon.id) || 0;
-
-            pkm_number.textContent = `#${pokemon_id}`;
-            pkm_number.id = `pkm_number_${pokemon_id}`;
-
-            pkm_img_url.src = `images/${pokemon_id}.png`;
-            pkm_img_url.id = `pkm_img_url_${pokemon_id}`;
-            pkm_img_url.style = `filter: grayscale(${pokemonCounter > 0 ? 0 : 1});`;
-
-            pkm_name.textContent = pokemon.name;
-            pkm_name.id = `pkm_name_${pokemon_id}`;
-
-            btn_add_pkm.id = `pkm_btn_add_pkm_${pokemon_id}`;
-            btn_add_pkm.dataset.id = pokemon_id;
-
-            btn_sub_pkm.id = `pkm_btn_sub_pkm_${pokemon_id}`;
-            btn_sub_pkm.dataset.id = pokemon_id;
-
-            pkm_counter.id = `pkm_counter_${pokemon_id}`;
-            pkm_counter.textContent = pokemonCounter;
-
-            pkm_evolutions.id = `pkm_evolutions_${pokemon_id}`;
-
-
-
-            if (!Object.hasOwn(pokemon, 'preEvolution') && !Object.hasOwn(pokemon, 'evolutions')) {
-                clone.querySelector('.pkm_evo_container').classList.add('d-none');
-            }
-    
-            if (pokemon.preEvolution) {
-                let preevo = pokemon.preEvolution;
-                //const image = document.createElement('img');
-                const cloneEvo = document.importNode(templateEvo.content, true);
-                let image = cloneEvo.querySelector('.evo-icon')
-                image.src = `images/${preevo}.png`;
-                pkm_evolutions.appendChild(cloneEvo);
-            }
-    
-            pokemon.evolutions?.forEach((evo) => {
-                //const image = document.createElement('img');
-                const cloneEvo = document.importNode(templateEvo.content, true);
-                let image = cloneEvo.querySelector('.evo-icon')
-                image.src = `images/${evo}.png`;
-                pkm_evolutions.appendChild(cloneEvo);
+            Object.entries(pokemon.forms).forEach(([formID, form]) => {
+                createPkmnContainer(pokemonID, formID);
             });
-    
-            list.appendChild(clone);
+        } else {
+            createPkmnContainer(pokemonID);
         }
     });
 
@@ -74,68 +19,89 @@ if ("content" in document.createElement("template")) {
     alert('Template element unsupported.');
 }
 
-function appendForms(pokemon) {
-    const pokemon_id = pokemon.id;
-    pokemon.forms.forEach((form) => {
-        const form_id = form.id;
-        const clone = document.importNode(template.content, true);
-        let pkm_number = clone.querySelector(".pkm_number");
-        let pkm_img_url = clone.querySelector(".pkm_img_url");
-        let pkm_name = clone.querySelector(".pkm_name");
-        let btn_add_pkm = clone.querySelector(".btn_add_pkm");
-        let btn_sub_pkm = clone.querySelector(".btn_sub_pkm");
-        let pkm_counter = clone.querySelector(".pkm_counter");
-        let pkm_evolutions = clone.querySelector(".pkm_evolutions");
+function createPkmnContainer(pokemonID, formID = null) {
+    const pokemon = PokemonList[pokemonID];
+    const form = formID ? pokemon.forms[formID] : null;
+    const clone = document.importNode(template.content, true);
 
-        var pokemonCounter = localStorage.getItem(`${pokemon_id}-${form_id}`) || 0;
+    var pokemon_id = pokemonID.toString().padStart(3, '0');
+    var pokemon_name = pokemon.name;
+    var form_id = form ? `-${formID}` : '';
+    var form_name = form ? ` (${form.name})` : '';
 
-        pkm_number.textContent = `#${pokemon_id}`;
-        pkm_number.id = `pkm_number_${pokemon_id}-${form_id}`;
+    var pokemonCounter = Number(localStorage.getItem(`${pokemon_id}${form_id}`) || 0);
 
-        pkm_img_url.src = `images/${pokemon_id}-${form_id}.png`;
-        pkm_img_url.id = `pkm_img_url_${pokemon_id}-${form_id}`;
-        pkm_img_url.style = `filter: grayscale(${pokemonCounter > 0 ? 0 : 1});`;
+    let pkmn_container = clone.querySelector(".pkmn-container");
+    pkmn_container.id = `pkmn_${pokemon_id}${form_id}`;
+    pkmn_container.dataset.id = `${pokemon_id}${form_id}`;
 
-        pkm_name.textContent = `${pokemon.name} (${form.name})`;
-        pkm_name.id = `pkm_name_${pokemon_id}-${form_id}`;
+    let pkmn_number = clone.querySelector(".pkmn-number");
+    pkmn_number.textContent = `#${pokemon_id}`;
 
-        btn_add_pkm.id = `pkm_btn_add_pkm_${pokemon_id}-${form_id}`;
-        btn_add_pkm.dataset.id = `${pokemon_id}-${form_id}`;
+    let pkmn_img_url = clone.querySelector(".pkmn-img-url");
+    pkmn_img_url.src = `images/${pokemon_id}${form_id}.png`;
+    pkmn_img_url.classList.toggle('grayscale-dark', pokemonCounter <= 0);
 
-        btn_sub_pkm.id = `pkm_btn_sub_pkm_${pokemon_id}-${form_id}`;
-        btn_sub_pkm.dataset.id = `${pokemon_id}-${form_id}`;
+    let pkmn_name = clone.querySelector(".pkmn-name");
+    pkmn_name.textContent = `${pokemon_name}${form_name}`;
+    
+    let pkmn_counter = clone.querySelector(".pkmn-counter");
+    pkmn_counter.textContent = pokemonCounter;
 
-        pkm_counter.id = `pkm_counter_${pokemon_id}-${form_id}`;
-        pkm_counter.textContent = pokemonCounter;
+    let pkmn_evolutions = clone.querySelector(".pkmn-evolutions");
 
-        pkm_evolutions.id = `pkm_evolutions_${pokemon_id}-${form_id}`;
+    if (!Object.hasOwn(pokemon, 'preEvolution') && !Object.hasOwn(pokemon, 'evolutions')) {
+        clone.querySelector('.pkmn-evo-container').classList.add('d-none');
+    }
 
-        if (!Object.hasOwn(pokemon, 'preEvolution') && !Object.hasOwn(pokemon, 'evolutions')) {
-            clone.querySelector('.pkm_evo_container').classList.add('d-none');
-        }
+    if (pokemon.preEvolution) {
+        let preevolution = pokemon.preEvolution.toString().padStart(3, '0');
+        evolutionIcon(preevolution, pkmn_evolutions);
+    }
 
-        list.appendChild(clone);
+    pokemon.evolutions?.forEach((evo) => {
+        let evolution = evo.toString().padStart(3, '0');
+        evolutionIcon(evolution, pkmn_evolutions);
     });
+
+    list.appendChild(clone);
 }
 
-function addPokemon(element) {
-    const counterElement = document.querySelector(`#pkm_counter_${element.dataset.id}`);
-    //let number = parseInt(counterElement.textContent, 10);
-    let number = localStorage.getItem(`${element.dataset.id}`) || 0;
-    number++;
-    localStorage.setItem(`${element.dataset.id}`, number);
-    document.getElementById(`pkm_img_url_${element.dataset.id}`).style = `filter: grayscale(${number > 0 ? 0 : 1});`
-    counterElement.textContent = localStorage.getItem(`${element.dataset.id}`);
+function updateCounter(pokemonID, number) {
+    const counter = Number(localStorage.getItem(pokemonID) || 0);
+    const result = Math.max((counter + number), 0);
+    localStorage.setItem(pokemonID, result);
+
+    updateCounterVisual(pokemonID, result);
 }
 
-function substractPokemon(element) {
-    const counterElement = document.querySelector(`#pkm_counter_${element.dataset.id}`);
-    //let number = parseInt(counterElement.textContent, 10);
-    let number = localStorage.getItem(`${element.dataset.id}`) || 0;
-    number--;
-    localStorage.setItem(`${element.dataset.id}`, Math.max(number, 0));
-    document.getElementById(`pkm_img_url_${element.dataset.id}`).style = `filter: grayscale(${number > 0 ? 0 : 1});`
-    counterElement.textContent = localStorage.getItem(`${element.dataset.id}`);
+function updateCounterVisual(pokemonID, number) {
+    // Pokemon Icon (Grayscale)
+    document
+        .querySelector(`#pkmn_${pokemonID} img.pkmn-img-url`)
+        .classList.toggle('grayscale-dark', number <= 0);
+    // Counter
+    document
+        .querySelector(`#pkmn_${pokemonID} span.pkmn-counter`)
+        .textContent = localStorage.getItem(pokemonID);
+}
+
+function evolutionIcon(evolution, evolutionElement) {
+    const clone = document.importNode(templateEvo.content, true);
+    let image = clone.querySelector('.pkmn-evo-icon')
+    image.src = `images/${evolution}.png`;
+    image.dataset.evo = evolution;
+
+    evolutionElement.appendChild(clone);
+}
+
+function evolvePokemon(pokemonID, evolutionID) {
+    const counter = Number(localStorage.getItem(pokemonID));
+    if (!counter) {
+        return;
+    }
+    updateCounter(pokemonID, -1);
+    updateCounter(evolutionID, 1)
 }
 
 function resetData(){
@@ -152,21 +118,21 @@ function exportFile() {
     var myFile = new Blob([fileContent], {type: 'text/plain'});
 
     window.URL = window.URL || window.webkitURL;
-    var dlBtn = document.getElementById("export_checklist");
+    var dlBtn = document.querySelector("#export_checklist");
 
     dlBtn.setAttribute("href", window.URL.createObjectURL(myFile));
     dlBtn.setAttribute("download", fileName);
 }
 
-function importFile() {
-    var reader = new FileReader();
-    console.log(reader)
+// function importFile() {
+//     var reader = new FileReader();
+//     console.log(reader)
 
-    // var data = JSON.parse(/*paste stringified JSON from clipboard*/);
-    // Object.keys(data).forEach(function (k) {
-    //     localStorage.setItem(k, data[k]);
-    // });
-}
+//     // var data = JSON.parse(/*paste stringified JSON from clipboard*/);
+//     // Object.keys(data).forEach(function (k) {
+//     //     localStorage.setItem(k, data[k]);
+//     // });
+// }
 
 const streamToText = async (blob) => {
     const readableStream = await blob.getReader();
@@ -182,8 +148,8 @@ const bufferToText = (buffer) => {
     return new TextDecoder().decode(bufferUint8Array);
 };
 
-document.getElementById('file-upload').addEventListener('change', function(e) {
-    let file = document.getElementById('file-upload').files[0];
+document.querySelector('#file_upload').addEventListener('change', function(e) {
+    let file = document.querySelector('#file_upload').files[0];
 
     (async () => {
         const fileContent = await file.text();
