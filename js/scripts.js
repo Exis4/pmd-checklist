@@ -1,16 +1,13 @@
 const list = document.querySelector('#pokemon_list');
-const template = document.querySelector("#templatepkm");
+const template = document.querySelector("#template_pkmn");
 const templateEvo = document.querySelector("#template_pkmn_evo");
 
 // Test to see if the browser supports the HTML template element by checking
 // for the presence of the template element's content attribute.
 if ("content" in document.createElement("template")) {
-    Object.entries(PokemonList).forEach(([pokemonID, pokemon]) => {
-        if (pokemon.forms) {
-            Object.entries(pokemon.forms).forEach(([formID, form]) => {
-                createPkmnContainer(pokemonID, formID);
-            });
-        } else {
+    sortPokemonList(PokemonList).forEach((pokemonID) => {
+        const pokemon = PokemonList[pokemonID];
+        if (!pokemon.unavailable) {
             createPkmnContainer(pokemonID);
         }
     });
@@ -19,27 +16,25 @@ if ("content" in document.createElement("template")) {
     alert('Template element unsupported.');
 }
 
-function createPkmnContainer(pokemonID, formID = null) {
+function createPkmnContainer(pokemonID) {
     const pokemon = PokemonList[pokemonID];
-    const form = formID ? pokemon.forms[formID] : null;
     const clone = document.importNode(template.content, true);
 
-    var pokemon_id = pokemonID.toString().padStart(3, '0');
+    var pokemon_id = pokemonID.toString();
     var pokemon_name = pokemon.name;
-    var form_id = form ? `-${formID}` : '';
-    var form_name = form ? ` (${form.name})` : '';
+    var form_name = pokemon.formName ? ` (${pokemon.formName})` : '';
 
-    var pokemonCounter = Number(localStorage.getItem(`${pokemon_id}${form_id}`) || 0);
+    var pokemonCounter = Number(localStorage.getItem(`${pokemon_id}`) || 0);
 
     let pkmn_container = clone.querySelector(".pkmn-container");
-    pkmn_container.id = `pkmn_${pokemon_id}${form_id}`;
-    pkmn_container.dataset.id = `${pokemon_id}${form_id}`;
+    pkmn_container.id = `pkmn_${pokemon_id}`;
+    pkmn_container.dataset.id = `${pokemon_id}`;
 
     let pkmn_number = clone.querySelector(".pkmn-number");
-    pkmn_number.textContent = `#${pokemon_id}`;
+    pkmn_number.textContent = `#${pokemon.baseForm ? pokemon.baseForm.toString() : pokemon_id}`;
 
     let pkmn_img_url = clone.querySelector(".pkmn-img-url");
-    pkmn_img_url.src = `images/${pokemon_id}${form_id}.png`;
+    pkmn_img_url.src = `images/${pokemon_id.padStart(3, '0')}.png`;
     pkmn_img_url.classList.toggle('grayscale-dark', pokemonCounter <= 0);
 
     let pkmn_name = clone.querySelector(".pkmn-name");
@@ -55,12 +50,12 @@ function createPkmnContainer(pokemonID, formID = null) {
     }
 
     if (pokemon.preEvolution) {
-        let preevolution = pokemon.preEvolution.toString().padStart(3, '0');
+        let preevolution = pokemon.preEvolution.toString();
         evolutionIcon(preevolution, pkmn_evolutions);
     }
 
     pokemon.evolutions?.forEach((evo) => {
-        let evolution = evo.toString().padStart(3, '0');
+        let evolution = evo.toString();
         evolutionIcon(evolution, pkmn_evolutions);
     });
 
@@ -89,7 +84,7 @@ function updateCounterVisual(pokemonID, number) {
 function evolutionIcon(evolution, evolutionElement) {
     const clone = document.importNode(templateEvo.content, true);
     let image = clone.querySelector('.pkmn-evo-icon')
-    image.src = `images/${evolution}.png`;
+    image.src = `images/${evolution.padStart(3, '0')}.png`;
     image.dataset.evo = evolution;
 
     evolutionElement.appendChild(clone);
@@ -101,7 +96,11 @@ function evolvePokemon(pokemonID, evolutionID) {
         return;
     }
     updateCounter(pokemonID, -1);
-    updateCounter(evolutionID, 1)
+    updateCounter(evolutionID, 1);
+
+    if (Number(pokemonID) === Species.Nincada) {
+        updateCounter(Species.Shedinja, 1);
+    }
 }
 
 function resetData(){
@@ -114,7 +113,6 @@ function resetData(){
 function exportFile() {
     var fileName = "pmd_checklist.txt";
     var fileContent = btoa(JSON.stringify(localStorage));
-    //var fileContent = JSON.stringify(localStorage);
     var myFile = new Blob([fileContent], {type: 'text/plain'});
 
     window.URL = window.URL || window.webkitURL;
@@ -123,16 +121,34 @@ function exportFile() {
     dlBtn.setAttribute("href", window.URL.createObjectURL(myFile));
     dlBtn.setAttribute("download", fileName);
 }
+function importFile() {
+    let file = document.querySelector('#file_upload').files[0];
 
-// function importFile() {
-//     var reader = new FileReader();
-//     console.log(reader)
+    (async () => {
+        const fileContent = await file.text();
+        // const fileContentStream = await file.stream();
+        // const buffer = await file.arrayBuffer();
+        // const fileSliceBlob = file.slice(0, file.length);
+        // const fileSliceBlobStream = await fileSliceBlob.stream();
 
-//     // var data = JSON.parse(/*paste stringified JSON from clipboard*/);
-//     // Object.keys(data).forEach(function (k) {
-//     //     localStorage.setItem(k, data[k]);
-//     // });
-// }
+        var data = JSON.parse(atob(fileContent));
+
+        localStorage.clear();
+
+        Object.keys(data).forEach(function (k) {
+            // Transform the ID into number to remove 0 padding
+            var key = k;
+            if (!Number.isNaN(Number(k))) {
+                key = Number(k);
+            }
+            localStorage.setItem(key, data[k]);
+        });
+    })();
+
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
 
 const streamToText = async (blob) => {
     const readableStream = await blob.getReader();
@@ -148,34 +164,93 @@ const bufferToText = (buffer) => {
     return new TextDecoder().decode(bufferUint8Array);
 };
 
-document.querySelector('#file_upload').addEventListener('change', function(e) {
-    let file = document.querySelector('#file_upload').files[0];
+//
 
-    (async () => {
-        const fileContent = await file.text();
+const dungeonList = document.querySelector('#dungeon_list tbody');
+const templateDungeonTr = document.querySelector("#template_dungeon_tr");
+const templateDungeonEncounter = document.querySelector("#template_dungeon_encounter");
+const templateDungeonFloor = document.querySelector("#template_dungeon_floor");
+if ("content" in document.createElement("template")) {
+    Object.entries(DungeonList).forEach(([dungeonID, dungeon]) => {
+        //createPkmnContainer(pokemonID);
+        const clone = document.importNode(templateDungeonTr.content, true);
+        const dungeonRow = clone.querySelector('.dungeon-row button');
+        dungeonRow.textContent = dungeon.name;
+        dungeonRow.dataset.id = dungeonID;
 
-        console.log('.text()', fileContent);
+        dungeonList.appendChild(clone);
+    });
 
-        const fileContentStream = await file.stream();
+} else {
+    alert('Template element unsupported.');
+}
 
-        console.log('.stream()', await streamToText(fileContentStream));
+function dungeonModal(dungeonID) {
+    const modalElement = document.querySelector("#dungeon_modal");
+    const bootstrapModal = new bootstrap.Modal(modalElement, {});
+    const modalTitle = modalElement.querySelector('.modal-title');
+    const modalBody = modalElement.querySelector('.modal-body');
+    // Clear the modal
+    modalBody.innerHTML = '';
 
-        const buffer = await file.arrayBuffer();
+    const dungeon = DungeonList[dungeonID];
+    modalTitle.textContent = dungeon.name;
+    DungeonEncounterTables[dungeonID].forEach((floor) => {
+        const cloneFloor = document.importNode(templateDungeonFloor.content, true);
+        const floorDirection = dungeon.stairDirectionUp ? '' : 'B';
+        const initialFloor = `${floorDirection}${floor.initialFloor}F`;
+        const finalFloor = `${floorDirection}${floor.finalFloor}F`;
+        const floorTitle = floor.initialFloor === floor.finalFloor ? initialFloor : `${initialFloor} - ${finalFloor}`;
 
-        console.log('.buffer()', bufferToText(buffer));
+        cloneFloor.querySelector('.floor-title').textContent = floorTitle;
+        const floorTable = cloneFloor.querySelector('.floor-table tbody');
 
-        const fileSliceBlob = file.slice(0, file.length);
-        const fileSliceBlobStream = await fileSliceBlob.stream();
+        if (!floor.pokemonData.length) {
+            cloneFloor.querySelector('.floor-body').innerHTML = '<hr/><div class="text-center">No Pokémon found in this floor.</div><hr/>';
+        }
 
-        console.log('.slice() and .stream()', await streamToText(fileSliceBlobStream));
+        floor.pokemonData.forEach((pokemon) => {
+            // If probability is 0, skip
+            if (!pokemon.probability) {
+                return;
+            }
 
-        var data = JSON.parse(atob(fileContent));
-        Object.keys(data).forEach(function (k) {
-            localStorage.setItem(k, data[k]);
+            const cloneEncounter = document.importNode(templateDungeonEncounter.content, true);
+            const encounterName = cloneEncounter.querySelector('.encounter-name');
+            const encounterIcon = cloneEncounter.querySelector('.encounter-icon img');
+            const encounterProbability = cloneEncounter.querySelector('.encounter-probability');
+            const encounterLevel = cloneEncounter.querySelector('.encounter-level');
+
+            encounterName.textContent = PokemonList[pokemon.species].name;
+            encounterIcon.src = `images/${pokemon.species.toString().padStart(3, '0')}.png`;
+            //encounterIcon.classList = Number(localStorage.getItem(pokemon.species)) > 0 ? '' : 'grayscale-dark';
+            encounterProbability.textContent = `${pokemon.probability / 100}%`;
+            encounterLevel.textContent = pokemon.level;
+
+            floorTable.appendChild(cloneEncounter)
         });
-    })();
 
-    setTimeout(() => {
-        location.reload();
-    }, 1000);
-});
+        modalBody.appendChild(cloneFloor);
+    });
+
+    bootstrapModal.show();
+}
+
+
+function sortPokemonList(pokemonList) {
+    var keys = Object.keys(pokemonList);
+    return keys.sort((a,b) => {
+        const nameA = pokemonList[a].baseForm ? pokemonList[a].baseForm : a;
+        const nameB = pokemonList[b].baseForm ? pokemonList[b].baseForm : b;
+        // if (nameA < nameB) {
+        //     return -1;
+        // }
+        // if (nameA > nameB) {
+        //     return 1;
+        // }
+
+        // // names must be equal
+        // return 0;
+        return nameA - nameB;
+    });
+}
