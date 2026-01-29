@@ -473,9 +473,9 @@ const PokemonList = Object.freeze({
     [Species.Vigoroth]:             { name: "Vigoroth", type: [PokemonType.Normal], evolutions: [Species.Slaking], preEvolution: Species.Slakoth },
     [Species.Slaking]:              { name: "Slaking", type: [PokemonType.Normal], preEvolution: Species.Vigoroth },
   
-    [Species.Nincada]:              { name: "Nincada", type: [PokemonType.Bug, PokemonType.Ground], evolutions: [Species.Ninjask] },
+    [Species.Nincada]:              { name: "Nincada", type: [PokemonType.Bug, PokemonType.Ground], evolutions: [Species.Ninjask, Species.Shedinja] },
     [Species.Ninjask]:              { name: "Ninjask", type: [PokemonType.Bug, PokemonType.Flying], preEvolution: Species.Nincada },
-    [Species.Shedinja]:             { name: "Shedinja", type: [PokemonType.Bug, PokemonType.Ghost] },
+    [Species.Shedinja]:             { name: "Shedinja", type: [PokemonType.Bug, PokemonType.Ghost], preEvolution: Species.Nincada },
   
     [Species.Whismur]:              { name: "Whismur", type: [PokemonType.Normal], evolutions: [Species.Loudred] },
     [Species.Loudred]:              { name: "Loudred", type: [PokemonType.Normal], evolutions: [Species.Exploud], preEvolution: Species.Whismur },

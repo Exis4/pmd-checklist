@@ -100,8 +100,6 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 9,
             finalFloor: 9,
             pokemonData: [
-                //{ species: Species.Diglett, level: 5, probability: 0 },
-                //{ species: Species.Skarmory, level: 10, probability: 0 },
                 { species: Species.Aron, level: 6, probability: 6667 },
                 { species: Species.Beldum, level: 5, probability: 3333 },
             ],
@@ -2812,15 +2810,7 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 15,
             finalFloor: 15,
             pokemonData: [
-                { species: Species.Geodude, level: 27, probability: 0 },
-                { species: Species.Ditto, level: 25, probability: 0 },
-                { species: Species.Noctowl, level: 30, probability: 0 },
-                { species: Species.Porygon2, level: 20, probability: 0 },
-                { species: Species.Aron, level: 35, probability: 0 },
-                { species: Species.Gulpin, level: 20, probability: 0 },
                 { species: Species.Regirock, level: 18, probability: 10000 },
-                { species: Species.Regice, level: 23, probability: 0 },
-                { species: Species.Registeel, level: 25, probability: 0 },
             ],
         },
         {
@@ -2941,10 +2931,6 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 35,
             finalFloor: 35,
             pokemonData: [
-                { species: Species.Sandshrew, level: 30, probability: 0 },
-                { species: Species.Shedinja, level: 5, probability: 0 },
-                { species: Species.Regirock, level: 18, probability: 0 },
-                { species: Species.Regice, level: 23, probability: 0 },
                 { species: Species.Registeel, level: 25, probability: 10000 },
             ],
         },
@@ -3343,7 +3329,6 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 25,
             finalFloor: 25,
             pokemonData: [
-                { species: Species.Seviper, level: 25, probability: 0 },
                 //{ species: Species.Latias, level: 28, probability: 5000 },
                 { species: Species.Latios, level: 30, probability: 10000, boss: true, recruitable: false },
             ],
@@ -3355,11 +3340,9 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 6, 
             pokemonData: [
                 { species: Species.Sandshrew, level: 30, probability: 3077 }, 
-                { species: Species.Sandslash, level: 35, probability: 0 }, 
                 { species: Species.Shedinja, level: 5, probability: 1923 }, 
                 { species: Species.Nosepass, level: 31, probability: 1923 }, 
                 { species: Species.Trapinch, level: 35, probability: 3077 }, 
-                { species: Species.Vibrava, level: 30, probability: 0 }, 
             ],
         },
         {
@@ -3369,7 +3352,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Nidoqueen, level: 33, probability: 4000 }, 
                 { species: Species.Hitmontop, level: 30, probability: 2000 }, 
                 { species: Species.Trapinch, level: 35, probability: 4000 }, 
-                { species: Species.Vibrava, level: 30, probability: 0 }, 
             ],
         },
         {
@@ -3379,7 +3361,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Nidoqueen, level: 33, probability: 4000 }, 
                 { species: Species.Hitmontop, level: 30, probability: 2000 }, 
                 { species: Species.Baltoy, level: 35, probability: 4000 }, 
-                { species: Species.Claydol, level: 26, probability: 0 }, 
             ],
         },
         {
@@ -3388,7 +3369,6 @@ const DungeonEncounterTables = Object.freeze({
             pokemonData: [
                 { species: Species.Nidoqueen, level: 33, probability: 5000 }, 
                 { species: Species.Baltoy, level: 35, probability: 5000 }, 
-                { species: Species.Claydol, level: 26, probability: 0 }, 
             ],
         },
         {
@@ -3398,7 +3378,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Sandslash, level: 35, probability: 2759 }, 
                 { species: Species.Gligar, level: 12, probability: 2758 }, 
                 { species: Species.Baltoy, level: 35, probability: 2759 }, 
-                { species: Species.Claydol, level: 26, probability: 0 }, 
                 { species: Species.Dusclops, level: 33, probability: 1724 }, 
             ],
         },
@@ -3409,7 +3388,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 4,
             pokemonData: [
                 { species: Species.Diglett, level: 33, probability: 3333 },
-                { species: Species.Dugtrio, level: 30, probability: 0 },
                 { species: Species.Geodude, level: 27, probability: 3334 },
                 { species: Species.Seedot, level: 30, probability: 3333 },
             ],
@@ -3419,7 +3397,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 6,
             pokemonData: [
                 { species: Species.Diglett, level: 33, probability: 2857 },
-                { species: Species.Dugtrio, level: 30, probability: 0 },
                 { species: Species.Geodude, level: 27, probability: 2857 },
                 { species: Species.Cubone, level: 28, probability: 1429 },
                 { species: Species.Seedot, level: 30, probability: 2857 },
@@ -3430,7 +3407,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 7,
             pokemonData: [
                 { species: Species.Diglett, level: 33, probability: 4000 },
-                { species: Species.Dugtrio, level: 30, probability: 0 },
                 { species: Species.Cubone, level: 28, probability: 2000 },
                 { species: Species.Seedot, level: 30, probability: 4000 },
             ],
@@ -3591,7 +3567,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Rhyhorn, level: 30, probability: 2500 },
                 { species: Species.Donphan, level: 30, probability: 2500 },
                 { species: Species.Pupitar, level: 35, probability: 2500 },
-                { species: Species.Tyranitar, level: 50, probability: 0 },
                 { species: Species.Flygon, level: 35, probability: 2500 },
             ],
         },
@@ -3604,7 +3579,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Rhydon, level: 28, probability: 1667 },
                 { species: Species.Donphan, level: 30, probability: 1666 },
                 { species: Species.Pupitar, level: 35, probability: 1667 },
-                { species: Species.Tyranitar, level: 50, probability: 0 },
             ],
         },
         {
@@ -3615,7 +3589,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Onix, level: 40, probability: 4000 },
                 { species: Species.Rhydon, level: 28, probability: 2000 },
                 { species: Species.Pupitar, level: 35, probability: 2000 },
-                { species: Species.Tyranitar, level: 50, probability: 0 },
             ],
         },
         {
@@ -3779,11 +3752,9 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 3, 
             pokemonData: [
                 { species: Species.Vulpix, level: 32, probability: 2759 },
-                { species: Species.Ninetales, level: 50, probability: 0 },
                 { species: Species.Ursaring, level: 25, probability: 2758 },
                 { species: Species.Slugma, level: 28, probability: 2759 },
                 { species: Species.Numel, level: 35, probability: 1724 },
-                { species: Species.Camerupt, level: 37, probability: 0 },
             ],
         },
         {
@@ -3791,12 +3762,10 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 4, 
             pokemonData: [
                 { species: Species.Vulpix, level: 32, probability: 2051 },
-                { species: Species.Ninetales, level: 50, probability: 0 },
                 { species: Species.Magmar, level: 33, probability: 2564 },
                 { species: Species.Ursaring, level: 25, probability: 2052 },
                 { species: Species.Slugma, level: 28, probability: 2051 },
                 { species: Species.Numel, level: 35, probability: 1282 },
-                { species: Species.Camerupt, level: 37, probability: 0 },
             ],
         },
         {
@@ -3804,7 +3773,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 5, 
             pokemonData: [
                 { species: Species.Charmander, level: 30, probability: 1333 },
-                { species: Species.Charmeleon, level: 30, probability: 0 },
                 { species: Species.Magmar, level: 33, probability: 3334 },
                 { species: Species.Ursaring, level: 25, probability: 2666 },
                 { species: Species.Slugma, level: 28, probability: 2667 },
@@ -3815,7 +3783,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 7, 
             pokemonData: [
                 { species: Species.Charmander, level: 30, probability: 1818 },
-                { species: Species.Charmeleon, level: 30, probability: 0 },
                 { species: Species.Magmar, level: 33, probability: 4546 },
                 { species: Species.Magby, level: 31, probability: 3636 },
             ],
@@ -3825,7 +3792,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 8, 
             pokemonData: [
                 { species: Species.Charmander, level: 30, probability: 3333 },
-                { species: Species.Charmeleon, level: 30, probability: 0 },
                 { species: Species.Magby, level: 31, probability: 6667 },
             ],
         },
@@ -3903,7 +3869,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 29, 
             pokemonData: [
                 { species: Species.Charmeleon, level: 30, probability: 5000 },
-                { species: Species.Charizard, level: 55, probability: 0 },
                 { species: Species.Combusken, level: 26, probability: 5000 },
             ],
         },
@@ -3911,10 +3876,7 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 30, 
             finalFloor: 30, 
             pokemonData: [
-                { species: Species.Charmeleon, level: 30, probability: 0 },
-                { species: Species.Charizard, level: 55, probability: 0 },
                 { species: Species.Entei, level: 45, probability: 10000 },
-                { species: Species.Combusken, level: 26, probability: 0 },
             ],
         },
     ],
@@ -4054,7 +4016,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Golduck, level: 24, probability: 2424 }, 
                 { species: Species.Vaporeon, level: 22, probability: 304 }, 
                 { species: Species.Croconaw, level: 28, probability: 2424 }, 
-                { species: Species.Feraligatr, level: 60, probability: 0 }, 
                 { species: Species.Politoed, level: 28, probability: 2424 }, 
             ],
         },
@@ -4065,7 +4026,6 @@ const DungeonEncounterTables = Object.freeze({
                 { species: Species.Wartortle, level: 30, probability: 2353 }, 
                 { species: Species.Golduck, level: 24, probability: 2353 }, 
                 { species: Species.Croconaw, level: 28, probability: 2353 }, 
-                { species: Species.Feraligatr, level: 60, probability: 0 }, 
                 { species: Species.Politoed, level: 28, probability: 2353 }, 
                 { species: Species.Absol, level: 45, probability: 588 }, 
             ],
@@ -4076,7 +4036,6 @@ const DungeonEncounterTables = Object.freeze({
             pokemonData: [
                 { species: Species.Wartortle, level: 30, probability: 3077 }, 
                 { species: Species.Croconaw, level: 28, probability: 3077 }, 
-                { species: Species.Feraligatr, level: 60, probability: 0 }, 
                 { species: Species.Politoed, level: 28, probability: 3077 }, 
                 { species: Species.Absol, level: 45, probability: 769 }, 
             ],
@@ -4085,11 +4044,7 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 30, 
             finalFloor: 30, 
             pokemonData: [
-                { species: Species.Croconaw, level: 28, probability: 0 }, 
-                { species: Species.Feraligatr, level: 60, probability: 0 }, 
-                { species: Species.Politoed, level: 28, probability: 0 }, 
                 { species: Species.Suicune, level: 45, probability: 10000 }, 
-                { species: Species.Absol, level: 45, probability: 0 }, 
             ],
         },
     ],
@@ -4271,10 +4226,7 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 5,
             pokemonData: [
                 { species: Species.Magnemite, level: 25, probability: 3333 },
-                { species: Species.Magneton, level: 28, probability: 0 },
                 { species: Species.Mareep, level: 28, probability: 3334 },
-                { species: Species.Flaaffy, level: 30, probability: 0 },
-                { species: Species.Ampharos, level: 33, probability: 0 },
                 { species: Species.Electrike, level: 12, probability: 3333 },
             ],
         },
@@ -4283,9 +4235,7 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 6,
             pokemonData: [
                 { species: Species.Pikachu, level: 30, probability: 3333 },
-                { species: Species.Raichu, level: 25, probability: 0 },
                 { species: Species.Magnemite, level: 25, probability: 3334 },
-                { species: Species.Magneton, level: 28, probability: 0 },
                 { species: Species.Electrike, level: 12, probability: 3333 },
             ],
         },
@@ -4294,11 +4244,8 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 7,
             pokemonData: [
                 { species: Species.Pikachu, level: 30, probability: 2667 },
-                { species: Species.Raichu, level: 25, probability: 0 },
                 { species: Species.Magnemite, level: 25, probability: 2666 },
-                { species: Species.Magneton, level: 28, probability: 0 },
                 { species: Species.Flaaffy, level: 30, probability: 2667 },
-                { species: Species.Ampharos, level: 33, probability: 0 },
                 { species: Species.Plusle, level: 30, probability: 1000 },
                 { species: Species.Minun, level: 30, probability: 1000 },
             ],
@@ -4308,10 +4255,8 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 10,
             pokemonData: [
                 { species: Species.Pikachu, level: 30, probability: 2667 },
-                { species: Species.Raichu, level: 25, probability: 0 },
                 { species: Species.Jolteon, level: 25, probability: 2666 },
                 { species: Species.Flaaffy, level: 30, probability: 2667 },
-                { species: Species.Ampharos, level: 33, probability: 0 },
                 { species: Species.Plusle, level: 30, probability: 1000 },
                 { species: Species.Minun, level: 30, probability: 1000 },
             ],
@@ -4322,7 +4267,6 @@ const DungeonEncounterTables = Object.freeze({
             pokemonData: [
                 { species: Species.Jolteon, level: 25, probability: 2963 },
                 { species: Species.Flaaffy, level: 30, probability: 2963 },
-                { species: Species.Ampharos, level: 33, probability: 0 },
                 { species: Species.Plusle, level: 30, probability: 1111 },
                 { species: Species.Minun, level: 30, probability: 1111 },
                 { species: Species.Cacturne, level: 35, probability: 1852 },
@@ -4343,7 +4287,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 15,
             pokemonData: [
                 { species: Species.Electrode, level: 35, probability: 2963 },
-                { species: Species.Electabuzz, level: 12, probability: 0 },
                 { species: Species.Elekid, level: 34, probability: 2963 },
                 { species: Species.Plusle, level: 30, probability: 1111 },
                 { species: Species.Minun, level: 30, probability: 1111 },
@@ -4355,7 +4298,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 17,
             pokemonData: [
                 { species: Species.Electrode, level: 35, probability: 2286 },
-                { species: Species.Electabuzz, level: 12, probability: 0 },
                 { species: Species.Ampharos, level: 33, probability: 2285 },
                 { species: Species.Elekid, level: 34, probability: 2286 },
                 { species: Species.Plusle, level: 30, probability: 857 },
@@ -4368,7 +4310,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 19,
             pokemonData: [
                 { species: Species.Electrode, level: 35, probability: 2667 },
-                { species: Species.Electabuzz, level: 12, probability: 0 },
                 { species: Species.Ampharos, level: 33, probability: 2666 },
                 { species: Species.Elekid, level: 34, probability: 2667 },
                 { species: Species.Plusle, level: 30, probability: 1000 },
@@ -4381,7 +4322,6 @@ const DungeonEncounterTables = Object.freeze({
             pokemonData: [
                 { species: Species.Magneton, level: 28, probability: 2162 },
                 { species: Species.Electrode, level: 35, probability: 2162 },
-                { species: Species.Electabuzz, level: 12, probability: 0 },
                 { species: Species.Ampharos, level: 33, probability: 2162 },
                 { species: Species.Elekid, level: 34, probability: 2163 },
                 { species: Species.Tropius, level: 35, probability: 1351 },
@@ -4392,7 +4332,6 @@ const DungeonEncounterTables = Object.freeze({
             finalFloor: 22,
             pokemonData: [
                 { species: Species.Magneton, level: 28, probability: 3810 },
-                { species: Species.Electabuzz, level: 12, probability: 0 },
                 { species: Species.Elekid, level: 34, probability: 3809 },
                 { species: Species.Tropius, level: 35, probability: 2381 },
             ],
@@ -4437,10 +4376,7 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 30,
             finalFloor: 30,
             pokemonData: [
-                { species: Species.Raichu, level: 25, probability: 0 },
                 { species: Species.Raikou, level: 45, probability: 10000 },
-                { species: Species.Manectric, level: 35, probability: 0 },
-                { species: Species.Tropius, level: 35, probability: 0 },
             ],
         },
     ],
@@ -8015,12 +7951,7 @@ const DungeonEncounterTables = Object.freeze({
             initialFloor: 99,
             finalFloor: 99,
             pokemonData: [
-                { species: Species.Parasect, level: 30, probability: 0 },
-                { species: Species.Weezing, level: 20, probability: 0 },
                 { species: Species.Celebi, level: 45, probability: 10000 },
-                { species: Species.Claydol, level: 26, probability: 0 },
-                { species: Species.Salamence, level: 26, probability: 0 },
-                { species: Species.Metagross, level: 28, probability: 0 },
             ],
         },
     ],

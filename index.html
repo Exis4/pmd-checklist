@@ -4,33 +4,35 @@
         <link href="css\styles.css" rel="stylesheet">
     </head>
     <body>
-        <div class="sticky-top bg-white w-100 border border-bottom border-black shadow-sm p-2">
-            <nav class="nav">
-                <a class="nav-link" id="export_checklist" href="#" onclick="exportFile()">Export</a>
-                <label for="file_upload" class="btn btn-link text-decoration-none">
-                    Import
-                </label>
-                <input type="file" class="form-control d-none" id="file_upload" aria-describedby="inputGroupFileAddon04" aria-label="Upload" onchange="importFile()">
-                <a class="btn btn-danger" href="#" onclick="resetData()">Reset</a>
-            </nav>
-        </div>
+        <nav class="navbar sticky-top bg-white w-100 border border-bottom border-black shadow-sm p-2" id="sticky_navbar">
+            <div class="container">
+                <a class="navbar-brand" href="#">PMD RRT Checklist</a>
+                <div class="d-flex justify-content-between flex-fill">
+                    <nav class="nav nav-pills">
+                        <a class="nav-link active mx-1" id="pokemon_tab" href="#" data-bs-toggle="tab" data-bs-target="#pokemon_tab_pane" role="tab" aria-controls="pokemon_tab_pane" aria-selected="true">Pokemon</a>
+                        <a class="nav-link mx-1" id="dungeon_tab" href="#" data-bs-toggle="tab" data-bs-target="#dungeon_tab_pane" role="tab" aria-controls="dungeon_tab_pane" aria-selected="false">Dungeon</a>
+                    </nav>
+                    <nav class="nav nav-pills">
+                        <a class="btn btn-primary mx-1" id="export_checklist" href="#" onclick="exportFile()">Export</a>
+                        <label class="btn btn-primary mx-1" type="button" for="file_upload">Import</label>
+                        <input type="file" class="form-control d-none" id="file_upload" aria-describedby="inputGroupFileAddon04" aria-label="Upload" onchange="importFile()">
+                        <a class="btn btn-danger mx-1" href="#" onclick="resetData()">Reset</a>
+                    </nav>
+                </div>
+            </div>
+        </nav>
 
         <div class="container">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Pokemon</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Dungeon</button>
-                </li>
+            <ul class="nav nav-pills" id="myTab" role="tablist">
+                
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                    <div class="row" id="pokemon_list">
+                <div class="tab-pane fade show active" id="pokemon_tab_pane" role="tabpanel" aria-labelledby="pokemon_tab" tabindex="0">
+                    <div class="row g-0" id="pokemon_list">
 
                     </div>
                 </div>
-                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <div class="tab-pane fade" id="dungeon_tab_pane" role="tabpanel" aria-labelledby="dungeon_tab" tabindex="0">
                     <table class="table table-hover" id="dungeon_list">
                         <tbody>
 
@@ -42,7 +44,7 @@
 
         <!-- MODAL -->
         <div class="dungeon-modal modal modal-lg fade" id="dungeon_modal" tabindex="-1" aria-labelledby="dungeon_modal_label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="dungeon_modal_label">Modal title</h1>
@@ -58,14 +60,40 @@
             </div>
         </div>
 
+        <div class="pokemon-modal modal modal-lg fade" id="pokemon_modal" tabindex="-1" aria-labelledby="pokemon_modal_label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img class="pkmn-img-url border border-dark" id="" src="images/---.png" />
+                        <h1 class="modal-title fs-5 mx-3" id="pokemon_modal_label">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <div class="d-flex justify-content-between align-items-end px-2" style="width: 10%;">
+                            <button class="btn-add-pkm btn btn-link text-decoration-none p-0" id="" data-id="" onclick="updateCounter(this.closest('#pokemon_modal').dataset.id, 1)">+</button>
+                            <span class="pkmn-counter" id="">0</span>
+                            <button class="btn-sub-pkm btn btn-link text-decoration-none p-0" id="" data-id="" onclick="updateCounter(this.closest('#pokemon_modal').dataset.id, -1)">-</button>
+                        </div>
+                        <div class="evolution-family">
+
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- TEMPLATES -->
 
         <template id="template_pkmn">
             <div class="pkmn-container col-1 p-1 text-center">
-                <div class="border border-black py-1">
+                <div class="border border-dark py-1 h-100">
                     <div class="pkmn-number" id="">#000</div>
                     <div>
-                        <img class="pkmn-img-url border border-black" id="" src="images/---.png" />
+                        <img class="pkmn-img-url border border-dark" id="" onclick="pokemonModal(Number(this.closest('.pkmn-container').dataset.id))" src="images/---.png" />
                     </div>
                     <div class="pkmn-name" id="">MissingNo.</div>
                     <div class="d-flex justify-content-between align-items-end px-2">
@@ -74,6 +102,7 @@
                         <button class="btn-sub-pkm btn btn-link text-decoration-none p-0" id="" data-id="" onclick="updateCounter(this.closest('.pkmn-container').dataset.id, -1)">-</button>
                     </div>
                     <div class="pkmn-evo-container ">
+                        <hr class="my-1"/>
                         <div>De/Evolve</div>
                         <div class="pkmn-evolutions d-flex justify-content-center flex-wrap" id=""></div>
                     </div>
@@ -82,7 +111,7 @@
         </template>
 
         <template id="template_pkmn_evo">
-            <img class="pkmn-evo-icon border border-black" id="" src="" onclick="evolvePokemon(Number(this.closest('.pkmn-container').dataset.id), Number(this.dataset.evo))"/>
+            <img class="pkmn-evo-icon border border-dark" id="" src="" onclick="evolvePokemon(Number(this.closest('.pkmn-container').dataset.id), Number(this.dataset.evo))"/>
         </template>
 
         <template id="template_dungeon_tr">
@@ -91,10 +120,21 @@
 
         <template id="template_dungeon_encounter">
             <tr>
-                <td class="encounter-icon"><img src="" /></td>
+                <td class="encounter-icon text-center"><img class="pkm-img-url border border-dark" onclick="pokemonModal(Number(this.dataset.id))" src="" /></td>
                 <td class="encounter-name">Dungeon Encounter</td>
-                <td class="encounter-level">Dungeon Encounter</td>
-                <td class="encounter-probability">Dungeon Encounter</td>
+                <td class="encounter-level text-center">Dungeon Encounter</td>
+                <td class="encounter-probability text-center">Dungeon Encounter</td>
+                <td class="pokemon-recruit-rate text-center">Dungeon Encounter</td>
+                <td class="pokemon-obtained text-center">Dungeon Encounter</td>
+            </tr>
+        </template>
+
+        <template id="template_pokemon_encounter">
+            <tr>
+                <td class="dungeon-name d-none">Dungeon Encounter</td>
+                <td class="dungeon-floor">Dungeon Encounter</td>
+                <td class="pokemon-level">Dungeon Encounter</td>
+                <td class="pokemon-probability">Dungeon Encounter</td>
             </tr>
         </template>
 
@@ -104,6 +144,24 @@
                 <table class="floor-table table table-hover align-middle table-bordered">
                     <thead>
                         <th colspan="2">Pokémon</th>
+                        <th class="text-center">Level</th>
+                        <th class="text-center">Encounter Rate</th>
+                        <th class="text-center">Recruit Rate</th>
+                        <th class="text-center">Obtained</th>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template id="template_pokemon_modal_body">
+            <div class="dungeon-list-body">
+                <table class="dungeon-list-table table table-hover align-middle table-bordered">
+                    <thead>
+                        <th>Dungeon</th>
+                        <th>Floors</th>
                         <th>Level</th>
                         <th>Encounter Rate</th>
                     </thead>
@@ -115,12 +173,19 @@
         </template>
     </body>
 
+    <template id="template_pokemon_icon">
+        <img class="pkm-img-url border border-dark" src="" />
+    </template>
+
     <script src="libraries\bootstrap-5.3.8-dist\js\bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script type="text/javascript" src="js/enums/pokemonSpecies.js"></script>
     <script type="text/javascript" src="js/enums/pokemonType.js"></script>
     <script type="text/javascript" src="js/enums/dungeons.js"></script>
+    <script type="text/javascript" src="js/enums/version.js"></script>
+    <script type="text/javascript" src="pmd_data.js"></script>
     <script type="text/javascript" src="pokemonList.js"></script>
     <script type="text/javascript" src="dungeonEncounterTables.js"></script>
     <script type="text/javascript" src="dungeonList.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/scripts.js"></script>
 </html>

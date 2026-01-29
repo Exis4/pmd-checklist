@@ -1,6 +1,7 @@
 const list = document.querySelector('#pokemon_list');
 const template = document.querySelector("#template_pkmn");
 const templateEvo = document.querySelector("#template_pkmn_evo");
+const templatePokemonIcon = document.querySelector("#template_pokemon_icon");
 
 // Test to see if the browser supports the HTML template element by checking
 // for the presence of the template element's content attribute.
@@ -34,7 +35,7 @@ function createPkmnContainer(pokemonID) {
     pkmn_number.textContent = `#${pokemon.baseForm ? pokemon.baseForm.toString() : pokemon_id}`;
 
     let pkmn_img_url = clone.querySelector(".pkmn-img-url");
-    pkmn_img_url.src = `images/${pokemon_id.padStart(3, '0')}.png`;
+    pkmn_img_url.src = getImageSrc(pokemon_id);
     pkmn_img_url.classList.toggle('grayscale-dark', pokemonCounter <= 0);
 
     let pkmn_name = clone.querySelector(".pkmn-name");
@@ -45,7 +46,8 @@ function createPkmnContainer(pokemonID) {
 
     let pkmn_evolutions = clone.querySelector(".pkmn-evolutions");
 
-    if (!Object.hasOwn(pokemon, 'preEvolution') && !Object.hasOwn(pokemon, 'evolutions')) {
+    // If no preevolution, not evolutions or Shedinja, hide de/evolution container
+    if ((!pokemon.preEvolution && !pokemon.evolutions) || Number(pokemonID) === Species.Shedinja) {
         clone.querySelector('.pkmn-evo-container').classList.add('d-none');
     }
 
@@ -55,8 +57,11 @@ function createPkmnContainer(pokemonID) {
     }
 
     pokemon.evolutions?.forEach((evo) => {
-        let evolution = evo.toString();
-        evolutionIcon(evolution, pkmn_evolutions);
+        // Hide icon for evolving Nincada into Shedinja
+        if (evo !== Species.Shedinja) {
+            let evolution = evo.toString();
+            evolutionIcon(evolution, pkmn_evolutions);
+        }
     });
 
     list.appendChild(clone);
@@ -79,12 +84,20 @@ function updateCounterVisual(pokemonID, number) {
     document
         .querySelector(`#pkmn_${pokemonID} span.pkmn-counter`)
         .textContent = localStorage.getItem(pokemonID);
+
+    // Counter in Pokemon Modal
+    const pokemonModalElement = document.querySelector('#pokemon_modal');
+    if (pokemonModalElement.classList.contains('show')) {
+        pokemonModalElement
+            .querySelector('.modal-footer .pkmn-counter')
+            .textContent = localStorage.getItem(pokemonID);
+    }
 }
 
 function evolutionIcon(evolution, evolutionElement) {
     const clone = document.importNode(templateEvo.content, true);
     let image = clone.querySelector('.pkmn-evo-icon')
-    image.src = `images/${evolution.padStart(3, '0')}.png`;
+    image.src = getImageSrc(evolution);
     image.dataset.evo = evolution;
 
     evolutionElement.appendChild(clone);
@@ -98,8 +111,12 @@ function evolvePokemon(pokemonID, evolutionID) {
     updateCounter(pokemonID, -1);
     updateCounter(evolutionID, 1);
 
+    // Evolving Nincada into Ninjask gives you Shedinja
     if (Number(pokemonID) === Species.Nincada) {
         updateCounter(Species.Shedinja, 1);
+    }
+    if (Number(pokemonID) === Species.Ninjask) {
+        updateCounter(Species.Shedinja, -1);
     }
 }
 
@@ -197,10 +214,7 @@ function dungeonModal(dungeonID) {
     modalTitle.textContent = dungeon.name;
     DungeonEncounterTables[dungeonID].forEach((floor) => {
         const cloneFloor = document.importNode(templateDungeonFloor.content, true);
-        const floorDirection = dungeon.stairDirectionUp ? '' : 'B';
-        const initialFloor = `${floorDirection}${floor.initialFloor}F`;
-        const finalFloor = `${floorDirection}${floor.finalFloor}F`;
-        const floorTitle = floor.initialFloor === floor.finalFloor ? initialFloor : `${initialFloor} - ${finalFloor}`;
+        const floorTitle = getFloorString(dungeonID, floor.initialFloor, floor.finalFloor);
 
         cloneFloor.querySelector('.floor-title').textContent = floorTitle;
         const floorTable = cloneFloor.querySelector('.floor-table tbody');
@@ -220,20 +234,109 @@ function dungeonModal(dungeonID) {
             const encounterIcon = cloneEncounter.querySelector('.encounter-icon img');
             const encounterProbability = cloneEncounter.querySelector('.encounter-probability');
             const encounterLevel = cloneEncounter.querySelector('.encounter-level');
+            const pokemonRecruitRate = cloneEncounter.querySelector('.pokemon-recruit-rate');
+            const pokemonObtained = cloneEncounter.querySelector('.pokemon-obtained');
 
-            encounterName.textContent = PokemonList[pokemon.species].name;
-            encounterIcon.src = `images/${pokemon.species.toString().padStart(3, '0')}.png`;
+            encounterName.innerHTML = `${PokemonList[pokemon.species].name} ${getGameVersionText(pokemon.species)}`;
+            encounterIcon.src = getImageSrc(pokemon.species);
+            encounterIcon.dataset.id = pokemon.species;
             //encounterIcon.classList = Number(localStorage.getItem(pokemon.species)) > 0 ? '' : 'grayscale-dark';
-            encounterProbability.textContent = `${pokemon.probability / 100}%`;
+            encounterProbability.textContent = calculateProbability(pokemon.probability);
             encounterLevel.textContent = pokemon.level;
+            pokemonRecruitRate.textContent = DungeonList[dungeonID].recruitingEnabled ? calculateRecruitRate(pokemon.species) : "Can't be recruited here";
+            pokemonObtained.textContent = localStorage.getItem(pokemon.species) || 0;
 
-            floorTable.appendChild(cloneEncounter)
+            floorTable.appendChild(cloneEncounter);
         });
 
         modalBody.appendChild(cloneFloor);
     });
 
     bootstrapModal.show();
+}
+
+const templatePokemonEncounter = document.querySelector("#template_pokemon_encounter");
+const templatePokemonModalBody = document.querySelector("#template_pokemon_modal_body");
+
+function pokemonModal(pokemonID) {
+    const modalElement = document.querySelector("#pokemon_modal");
+    const bootstrapModal = new bootstrap.Modal(modalElement, {});
+    
+    const modalTitle = modalElement.querySelector('.modal-title');
+    const modalHeaderIcon = modalElement.querySelector('.modal-header .pkmn-img-url');
+    const modalBody = modalElement.querySelector('.modal-body');
+    const modalFooter = modalElement.querySelector('.modal-footer');
+
+    modalElement.dataset.id = pokemonID;
+    modalFooter.querySelector('.pkmn-counter').textContent = localStorage.getItem(pokemonID) || 0;
+    // Clear the modal
+    modalBody.innerHTML = '';
+
+    const pokemon = PokemonList[pokemonID];
+    const recruitRate = calculateRecruitRate(pokemonID);
+    modalHeaderIcon.src = getImageSrc(pokemonID);
+    modalTitle.textContent = `${pokemon.name} (Recruitment rate: ${recruitRate}) (Body size: ${PokemonPMDData[pokemonID].bodySize}*)`;
+
+    const clonePokemonModalBody = document.importNode(templatePokemonModalBody.content, true);
+    const pokemonTable = clonePokemonModalBody.querySelector('.dungeon-list-table tbody');
+
+    Object.entries(filterDungeonList(pokemonID)).forEach(([dungeonID, dungeonEncounters]) => {
+        dungeonEncounters.forEach((floors) => {
+            //console.log(floors.length)
+            floors.forEach((floor, index) => {
+                const cloneDungeon = document.importNode(templatePokemonEncounter.content, true);
+                if (!DungeonList[dungeonID].recruitingEnabled) {
+                    cloneDungeon.querySelector('tr').classList.add('table-danger');
+                }
+                const dungeonFloor = cloneDungeon.querySelector('.dungeon-floor');
+                const pokemonLevel = cloneDungeon.querySelector('.pokemon-level');
+                const pokemonProbability = cloneDungeon.querySelector('.pokemon-probability');
+
+                // If first one of the dungeon, merge dungeon name rows
+                if (index === 0) {
+                    const dungeonName = cloneDungeon.querySelector('.dungeon-name');
+                    dungeonName.rowSpan = floors.length;
+                    dungeonName.textContent = DungeonList[Number(dungeonID)].name;
+                    dungeonName.classList.remove('d-none');
+                }
+
+                const floorTitle = getFloorString(dungeonID, floor.initialFloor, floor.finalFloor)
+
+                dungeonFloor.textContent = floorTitle;
+                pokemonLevel.textContent = floor.pokemonData[0].level;
+                pokemonProbability.textContent = calculateProbability(floor.pokemonData[0].probability);
+
+                pokemonTable.appendChild(cloneDungeon);
+            });
+        });
+        modalBody.appendChild(clonePokemonModalBody);
+    });
+
+    // Footer
+    const familyArray = getPokemonFamily(pokemonID);
+    const evolutionFamily = modalFooter.querySelector('.evolution-family');
+    evolutionFamily.innerHTML = '';
+    familyArray.forEach((speciesID) => {
+        const clonePokemonIcon = document.importNode(templatePokemonIcon.content, true);
+        clonePokemonIcon.querySelector('.pkm-img-url').src = getImageSrc(speciesID);
+        if (speciesID === pokemonID) {
+            clonePokemonIcon.querySelector('.pkm-img-url').classList.add('selected-species')
+        }
+        if (speciesID !== pokemonID) {
+            clonePokemonIcon.querySelector('.pkm-img-url').addEventListener('click', () => {
+                //alert(speciesID)
+                bootstrapModal.hide();
+                modalElement.addEventListener('hidden.bs.modal', event => {
+                    pokemonModal(speciesID);
+                }, { once: true });
+            })
+        }
+        
+        evolutionFamily.appendChild(clonePokemonIcon);
+    });
+
+    bootstrapModal.show();
+    //console.log(bootstrapModal._isShown)
 }
 
 
@@ -254,3 +357,58 @@ function sortPokemonList(pokemonList) {
         return nameA - nameB;
     });
 }
+
+function filterDungeonList(pokemonID) {
+    return Object.entries(DungeonEncounterTables).reduce((acc, [dungeonID, floors]) => {
+        // Check if any floor in this dungeon has the species
+        const matchedFloors = floors
+            .map(floor => ({
+                ...floor,
+                // Only keep the specific pokemon in the pokemonData array
+                pokemonData: floor.pokemonData.filter(p => p.species === pokemonID)
+            }))
+            .filter(floor => floor.pokemonData.length > 0);
+    
+        // If we found any floors with that species, add the dungeon to our result
+        if (matchedFloors.length > 0) {
+            acc[Number(dungeonID)] = [];
+            acc[Number(dungeonID)].push(matchedFloors);
+        }
+        
+        return acc;
+    }, {});
+}
+
+function getPokemonFamily(pokemonID) {
+    var basePokemonID = Number(pokemonID);
+    const family = [];
+
+    basePokemonID = getBaseStage(basePokemonID);
+    family.push(basePokemonID);
+    getEvolutionStages(basePokemonID);
+
+    function getEvolutionStages(speciesID) {
+        PokemonList[speciesID].evolutions?.forEach((evolutionID) => {
+            family.push(evolutionID);
+            if (PokemonList[evolutionID].evolutions) {
+                getEvolutionStages(evolutionID);
+            }
+        });
+    }
+    
+    return family;
+}
+
+function getBaseStage(pokemonID) {
+    while (PokemonList[pokemonID].preEvolution) {
+        pokemonID = PokemonList[pokemonID].preEvolution;
+    }
+    return pokemonID;
+}
+
+const pokemon_modal = document.querySelector('#pokemon_modal')
+pokemon_modal.addEventListener('show.bs.modal', event => {
+    ['bg-dark', 'bg-opacity-50'].forEach((singleClass) => {
+        pokemon_modal.classList.toggle(singleClass, document.querySelector('#dungeon_modal').classList.contains('show'));
+    });
+});

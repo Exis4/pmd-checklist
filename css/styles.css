@@ -1,3 +1,13 @@
+:root {
+    --nav-height: 1px; /* Just a default value */
+}
+
+.tab-pane{
+    height: calc(100vh - var(--nav-height));
+    overflow: hidden;
+    overflow-y: auto;
+}
+
 .pkm-img-url {
     width: 56px; 
 }
@@ -11,4 +21,12 @@
 
 .grayscale-dark {
     filter: grayscale(1) brightness(0.7);
+}
+
+.evolution-family img {
+    margin: 0 2px;
+}
+
+.selected-species {
+    box-shadow: 0px 0px 0px 4px #ff0000;
 }
