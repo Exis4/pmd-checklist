@@ -6,7 +6,9 @@
     <body>
         <nav class="navbar sticky-top bg-white w-100 border border-bottom border-black shadow-sm p-2" id="sticky_navbar">
             <div class="container">
-                <a class="navbar-brand" href="#">PMD RRT Checklist</a>
+                <a class="navbar-brand" href="#">
+                    PMD RRT Checklist: <span class="total-obtained">0</span><span>/</span><span class="max-pokemon">413</span>
+                </a>
                 <div class="d-flex justify-content-between flex-fill">
                     <nav class="nav nav-pills">
                         <a class="nav-link active mx-1" id="pokemon_tab" href="#" data-bs-toggle="tab" data-bs-target="#pokemon_tab_pane" role="tab" aria-controls="pokemon_tab_pane" aria-selected="true">Pokemon</a>
@@ -143,11 +145,11 @@
             <div class="floor-body">
                 <table class="floor-table table table-hover align-middle table-bordered">
                     <thead>
-                        <th colspan="2">Pokémon</th>
-                        <th class="text-center">Level</th>
-                        <th class="text-center">Encounter Rate</th>
-                        <th class="text-center">Recruit Rate</th>
-                        <th class="text-center">Obtained</th>
+                        <th class="col-4" colspan="2">Pokémon</th>
+                        <th class="col-1 text-center">Level</th>
+                        <th class="col-3 text-center">Encounter Rate</th>
+                        <th class="col-3 text-center">Recruit Rate</th>
+                        <th class="col-1 text-center">Obtained</th>
                     </thead>
                     <tbody>
     

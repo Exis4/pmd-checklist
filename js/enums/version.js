@@ -22,6 +22,13 @@ const BlueRescueTeamExclusives = [
     Species.Minun,
 ];
 
+const WonderMailDungeons = [
+    Dungeons.OddityCave,
+    Dungeons.RemainsIsland,
+    Dungeons.MarvelousSea,
+    Dungeons.FantasyStrait,
+]
+
 const Exclusives = Object.freeze({
     [RescueTeamVersion.Red]: RedRescueTeamExclusives,
     [RescueTeamVersion.Blue]: BlueRescueTeamExclusives,

@@ -1,3 +1,5 @@
+const MAX_POKEMON = 413;
+
 function getImageSrc(pokemonID) {
     return `images/${pokemonID.toString().padStart(3, '0')}.png`;
 }
@@ -28,6 +30,10 @@ function getRescueTeamVersion(pokemonID) {
     const gameVersion = Object.keys(Exclusives).find((key) => {return Exclusives[key].includes(pokemonID) || RescueTeamVersion.None});
     //return Object.keys(RescueTeamVersion)[gameVersion];
     return Number(gameVersion);
+}
+
+function getTotalObtained() {
+    return Object.values(localStorage).reduce((acc, curr) => acc + Number(curr), 0)
 }
 
 // Get navbar height and set it to a CSS variable

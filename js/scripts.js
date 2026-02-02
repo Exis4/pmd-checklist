@@ -3,6 +3,10 @@ const template = document.querySelector("#template_pkmn");
 const templateEvo = document.querySelector("#template_pkmn_evo");
 const templatePokemonIcon = document.querySelector("#template_pokemon_icon");
 
+const totalObtainedElement = document.querySelector('.total-obtained');
+const maxPokemonElement = document.querySelector('.max-pokemon');
+updateTotalCounter();
+
 // Test to see if the browser supports the HTML template element by checking
 // for the presence of the template element's content attribute.
 if ("content" in document.createElement("template")) {
@@ -80,6 +84,7 @@ function updateCounterVisual(pokemonID, number) {
     document
         .querySelector(`#pkmn_${pokemonID} img.pkmn-img-url`)
         .classList.toggle('grayscale-dark', number <= 0);
+
     // Counter
     document
         .querySelector(`#pkmn_${pokemonID} span.pkmn-counter`)
@@ -92,6 +97,19 @@ function updateCounterVisual(pokemonID, number) {
             .querySelector('.modal-footer .pkmn-counter')
             .textContent = localStorage.getItem(pokemonID);
     }
+
+    // Counter in Dungeon Modal
+    const dungeonModalElement = document.querySelector('#dungeon_modal');
+    if (dungeonModalElement.classList.contains('show')) {
+        console.log('test')
+        dungeonModalElement
+            .querySelectorAll(`.modal-body .pkmn-encounter-${pokemonID}`).forEach((element) => {
+                element.textContent = localStorage.getItem(pokemonID);
+            })
+    }
+
+    // Total counter
+    updateTotalCounter();
 }
 
 function evolutionIcon(evolution, evolutionElement) {
@@ -192,7 +210,7 @@ if ("content" in document.createElement("template")) {
         //createPkmnContainer(pokemonID);
         const clone = document.importNode(templateDungeonTr.content, true);
         const dungeonRow = clone.querySelector('.dungeon-row button');
-        dungeonRow.textContent = dungeon.name;
+        dungeonRow.textContent = `${dungeon.name} ${WonderMailDungeons.includes(Number(dungeonID)) ? '(*)' : ''}`;
         dungeonRow.dataset.id = dungeonID;
 
         dungeonList.appendChild(clone);
@@ -244,6 +262,7 @@ function dungeonModal(dungeonID) {
             encounterProbability.textContent = calculateProbability(pokemon.probability);
             encounterLevel.textContent = pokemon.level;
             pokemonRecruitRate.textContent = DungeonList[dungeonID].recruitingEnabled ? calculateRecruitRate(pokemon.species) : "Can't be recruited here";
+            pokemonObtained.classList.add(`pkmn-encounter-${pokemon.species}`);
             pokemonObtained.textContent = localStorage.getItem(pokemon.species) || 0;
 
             floorTable.appendChild(cloneEncounter);
@@ -280,7 +299,13 @@ function pokemonModal(pokemonID) {
     const clonePokemonModalBody = document.importNode(templatePokemonModalBody.content, true);
     const pokemonTable = clonePokemonModalBody.querySelector('.dungeon-list-table tbody');
 
-    Object.entries(filterDungeonList(pokemonID)).forEach(([dungeonID, dungeonEncounters]) => {
+    const filteredDungeonList = Object.entries(filterDungeonList(pokemonID));
+    if (!filteredDungeonList.length) {
+        clonePokemonModalBody.querySelector('.dungeon-list-body').innerHTML = `<hr/><div class="text-center">This Pokémon can't be found anywhere.</div><hr/>`;
+        modalBody.appendChild(clonePokemonModalBody);
+    }
+
+    filteredDungeonList.forEach(([dungeonID, dungeonEncounters]) => {
         dungeonEncounters.forEach((floors) => {
             //console.log(floors.length)
             floors.forEach((floor, index) => {
@@ -296,7 +321,7 @@ function pokemonModal(pokemonID) {
                 if (index === 0) {
                     const dungeonName = cloneDungeon.querySelector('.dungeon-name');
                     dungeonName.rowSpan = floors.length;
-                    dungeonName.textContent = DungeonList[Number(dungeonID)].name;
+                    dungeonName.textContent = `${DungeonList[Number(dungeonID)].name} ${WonderMailDungeons.includes(Number(dungeonID)) ? '(*)' : ''}`;
                     dungeonName.classList.remove('d-none');
                 }
 
@@ -404,6 +429,13 @@ function getBaseStage(pokemonID) {
         pokemonID = PokemonList[pokemonID].preEvolution;
     }
     return pokemonID;
+}
+
+function updateTotalCounter() {
+    const totalObtained = getTotalObtained();
+    totalObtainedElement.textContent = totalObtained;
+    maxPokemonElement.textContent = MAX_POKEMON;
+    totalObtainedElement.classList.toggle('text-danger', totalObtained > MAX_POKEMON)
 }
 
 const pokemon_modal = document.querySelector('#pokemon_modal')
